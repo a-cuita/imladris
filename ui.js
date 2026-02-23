@@ -118,6 +118,11 @@ function bindControls() {
         Viz.render(document.getElementById('mainCanvas'));
     });
 
+    // Settings save/load
+    bind('btnSaveSettings', saveSettings);
+    const settingsFileInput = document.getElementById('settingsFileInput');
+    if (settingsFileInput) settingsFileInput.addEventListener('change', (e) => loadSettings(e.target.files[0]));
+
     // Cell shape toggle
     bind('btnCellShape', () => {
         const shapes = ['rect', 'circle', 'dot'];
@@ -517,6 +522,61 @@ function removeGradientStop(i) {
 
 function rgbToHex(r, g, b) {
     return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
+}
+
+// ============================================================================
+// SETTINGS SAVE / LOAD (JSON)
+// ============================================================================
+
+function saveSettings() {
+    const settings = {
+        version: 1,
+        colorMode: State.settings.colorMode,
+        cellShape: State.settings.cellShape,
+        zScoreRange: State.settings.zScoreRange,
+        cautionThreshold: State.settings.cautionThreshold,
+        alertThreshold: State.settings.alertThreshold,
+        gradient: State.settings.gradient,
+        windowSize: State.view.windowSize
+    };
+    const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'imladris_settings.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showMessage('Settings saved.', 'success');
+}
+
+function loadSettings(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const s = JSON.parse(e.target.result);
+            if (s.colorMode) State.settings.colorMode = s.colorMode;
+            if (s.cellShape) State.settings.cellShape = s.cellShape;
+            if (s.zScoreRange) State.settings.zScoreRange = s.zScoreRange;
+            if (s.cautionThreshold) State.settings.cautionThreshold = s.cautionThreshold;
+            if (s.alertThreshold) State.settings.alertThreshold = s.alertThreshold;
+            if (s.gradient) State.settings.gradient = s.gradient;
+            if (s.windowSize) {
+                State.view.windowSize = s.windowSize;
+                const el = document.getElementById('windowSizeInput');
+                if (el) el.value = s.windowSize;
+            }
+            // Sync UI labels
+            setText('btnColorMode', State.settings.colorMode === 'rank' ? 'Color: Rank' : 'Color: Z-Score');
+            setText('btnCellShape', `Cell: ${State.settings.cellShape}`);
+            renderGradientEditor();
+            Viz.render(document.getElementById('mainCanvas'));
+            showMessage('Settings loaded.', 'success');
+        } catch (err) {
+            showMessage('Failed to load settings — invalid file.', 'error');
+        }
+    };
+    reader.readAsText(file);
 }
 
 // Alias so math.js getDivergence is accessible here without name collision
