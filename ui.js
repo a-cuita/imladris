@@ -118,6 +118,14 @@ function bindControls() {
         Viz.render(document.getElementById('mainCanvas'));
     });
 
+    // Sort mode toggle
+    bind('btnSortMode', () => {
+        const next = State.settings.sortMode === 'normal' ? 'middleOut' : 'normal';
+        State.settings.sortMode = next;
+        setText('btnSortMode', next === 'normal' ? 'Sort: Normal' : 'Sort: Middle-Out');
+        Viz.render(document.getElementById('mainCanvas'));
+    });
+
     // Settings save/load
     bind('btnSaveSettings', saveSettings);
     const settingsFileInput = document.getElementById('settingsFileInput');
@@ -537,7 +545,8 @@ function saveSettings() {
         cautionThreshold: State.settings.cautionThreshold,
         alertThreshold: State.settings.alertThreshold,
         gradient: State.settings.gradient,
-        windowSize: State.view.windowSize
+        windowSize: State.view.windowSize,
+        sortMode: State.settings.sortMode
     };
     const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -561,6 +570,7 @@ function loadSettings(file) {
             if (s.cautionThreshold) State.settings.cautionThreshold = s.cautionThreshold;
             if (s.alertThreshold) State.settings.alertThreshold = s.alertThreshold;
             if (s.gradient) State.settings.gradient = s.gradient;
+            if (s.sortMode) State.settings.sortMode = s.sortMode;
             if (s.windowSize) {
                 State.view.windowSize = s.windowSize;
                 const el = document.getElementById('windowSizeInput');
@@ -569,6 +579,7 @@ function loadSettings(file) {
             // Sync UI labels
             setText('btnColorMode', State.settings.colorMode === 'rank' ? 'Color: Rank' : 'Color: Z-Score');
             setText('btnCellShape', `Cell: ${State.settings.cellShape}`);
+            setText('btnSortMode', State.settings.sortMode === 'normal' ? 'Sort: Normal' : 'Sort: Middle-Out');
             renderGradientEditor();
             Viz.render(document.getElementById('mainCanvas'));
             showMessage('Settings loaded.', 'success');
