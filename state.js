@@ -74,7 +74,21 @@ const State = {
     settings: {
         cautionThreshold: 0.75,  // |gap| >= this → caution
         alertThreshold: 1.5,     // |gap| >= this → alert
-        colorScheme: 'earth'     // 'earth' | 'heat'
+
+        // Color mode:
+        // 'rank'   — color assigned by rank position (0=worst, 1=best), fully stretched every day
+        // 'zscore' — color assigned by actual signed z-score, anchored to zScoreRange
+        colorMode: 'rank',
+        zScoreRange: 3,          // z-score value mapped to gradient endpoints (mode: zscore only)
+
+        // Gradient stops — editable array, interpolated in order
+        // pos: 0.0 = worst/most negative, 1.0 = best/most positive
+        // Add, remove, or reposition stops freely
+        gradient: [
+            { pos: 0.0,  r: 220, g: 50,  b: 50  },   // worst — red
+            { pos: 0.5,  r: 40,  g: 40,  b: 40  },   // neutral — dark grey
+            { pos: 1.0,  r: 50,  g: 150, b: 220 }    // best — blue
+        ]
     },
 
     // ----------------------------------------------------------------
