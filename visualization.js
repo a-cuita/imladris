@@ -63,7 +63,19 @@ function render(canvas) {
     const refRanks = refCache ? refCache.ranks : {};
 
     const cats = [...State.categories].filter(c => !State.view.hiddenCats.has(c));
-    const sortedCats = [...cats].sort((a, b) => (refRanks[a] ?? 999) - (refRanks[b] ?? 999));
+    const rankSorted = [...cats].sort((a, b) => (refRanks[a] ?? 999) - (refRanks[b] ?? 999));
+
+    // Sort modes: 'normal' (rank 1 top) or 'middleOut' (extremes meet in center)
+    let sortedCats;
+    if (State.settings.sortMode === 'middleOut') {
+        const half = Math.floor(rankSorted.length / 2);
+        sortedCats = [
+            ...rankSorted.slice(0, half).reverse(),  // rank N/2 down to rank 1
+            ...rankSorted.slice(half).reverse()       // rank N down to rank N/2+1
+        ];
+    } else {
+        sortedCats = rankSorted;
+    }
 
     const numCats = sortedCats.length;
     const numDates = visibleDates.length;
@@ -141,16 +153,10 @@ function render(canvas) {
     const allZ = [...ovrZs, ...idxZs].filter(v => v !== null);
 
     if (allZ.length > 0) {
-        // Bound y-axis by actual category z-score range on anchor date
-        // so lines scale consistently with the heatmap color display
-        const anchorCache = State.cache[anchorDate];
-        const catZs = anchorCache
-            ? sortedCats.map(c => anchorCache.zScores[c]).filter(v => v !== null && v !== undefined)
-            : [];
-        const catMin = catZs.length > 0 ? Math.min(...catZs) : -2;
-        const catMax = catZs.length > 0 ? Math.max(...catZs) : 2;
-        const minZ = Math.min(...allZ, catMin);
-        const maxZ = Math.max(...allZ, catMax);
+        // Range based on visible window OVR/IDX values
+        // minZ anchors to bottom of heatmap, maxZ anchors to top
+        const minZ = Math.min(...allZ);
+        const maxZ = Math.max(...allZ);
         const rangeZ = maxZ - minZ || 1;
 
         const toY = (z) => heatTop + heatmapH - ((z - minZ) / rangeZ) * heatmapH;
