@@ -138,7 +138,7 @@ function handleFileInput(event) {
             if (typeof onDataError === 'function') onDataError(err.message);
         }
     };
-    reader.readAsText(file);
+    reader.readAsText(file, 'ISO-8859-1');
 }
 
 // ============================================================================
