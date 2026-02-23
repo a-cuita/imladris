@@ -30,7 +30,8 @@ const VIZ = {
     idxColor: '#cc5200',
     zeroLine: 'rgba(255,255,255,0.12)',
     highlightRow: 'rgba(250,204,21,0.12)',
-    blankCell: '#0a0e17',
+    blankCell: '#161d2e',    // Subtle fill — visible but recedes
+    gridLine: '#0d1420',        // Slightly darker gap between cells
 
     // Color driven by State.settings.gradient
 };
@@ -105,7 +106,11 @@ function render(canvas) {
 
             const rank = cached.ranks[cat];
             const isBlank = rank === refRank;
-            if (isBlank) return;
+            if (isBlank) {
+                ctx.fillStyle = VIZ.blankCell;
+                drawCell(ctx, x, y, cellWidth, VIZ.cellHeight, State.settings.cellShape || 'rect');
+                return;
+            }
 
             const z = cached.zScores[cat];
             if (z === undefined || z === null) {
@@ -136,8 +141,16 @@ function render(canvas) {
     const allZ = [...ovrZs, ...idxZs].filter(v => v !== null);
 
     if (allZ.length > 0) {
-        const minZ = Math.min(...allZ, -2);
-        const maxZ = Math.max(...allZ, 2);
+        // Bound y-axis by actual category z-score range on anchor date
+        // so lines scale consistently with the heatmap color display
+        const anchorCache = State.cache[anchorDate];
+        const catZs = anchorCache
+            ? sortedCats.map(c => anchorCache.zScores[c]).filter(v => v !== null && v !== undefined)
+            : [];
+        const catMin = catZs.length > 0 ? Math.min(...catZs) : -2;
+        const catMax = catZs.length > 0 ? Math.max(...catZs) : 2;
+        const minZ = Math.min(...allZ, catMin);
+        const maxZ = Math.max(...allZ, catMax);
         const rangeZ = maxZ - minZ || 1;
 
         const toY = (z) => heatTop + heatmapH - ((z - minZ) / rangeZ) * heatmapH;
