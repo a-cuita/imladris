@@ -36,7 +36,7 @@ const State = {
         currentDate: null,      // Date string currently displayed
         frame: 'presort',       // 'presort' | 'sorted' — two-frame beat
         direction: 1,           // 1 = forward, -1 = reverse
-        speed: 400,             // ms per frame
+        speed: 500,             // ms per frame
         timer: null             // setInterval handle
     },
 
@@ -79,6 +79,7 @@ const State = {
         // 'rank'   — color assigned by rank position (0=worst, 1=best), fully stretched every day
         // 'zscore' — color assigned by actual signed z-score, anchored to zScoreRange
         colorMode: 'rank',
+        cellShape: 'rect',       // 'rect' | 'circle' | 'dot'
         zScoreRange: 3,          // z-score value mapped to gradient endpoints (mode: zscore only)
 
         // Gradient stops — editable array, interpolated in order
