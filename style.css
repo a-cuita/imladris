@@ -471,3 +471,33 @@ html, body {
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+/* ============================================================
+   GRADIENT EDITOR
+   ============================================================ */
+
+.gradient-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.gradient-stop-row {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.gradient-stop-row input[type="color"] {
+    width: 32px;
+    height: 24px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    cursor: pointer;
+    background: none;
+}
+
+.gradient-stop-row .input-number {
+    width: 50px;
+}
