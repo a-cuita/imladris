@@ -80,6 +80,7 @@ const State = {
         // 'zscore' — color assigned by actual signed z-score, anchored to zScoreRange
         colorMode: 'rank',
         cellShape: 'rect',       // 'rect' | 'circle' | 'dot'
+        sortMode: 'normal',     // 'normal' | 'middleOut'
         zScoreRange: 3,          // z-score value mapped to gradient endpoints (mode: zscore only)
 
         // Gradient stops — editable array, interpolated in order
