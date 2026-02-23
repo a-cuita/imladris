@@ -118,6 +118,20 @@ function bindControls() {
         Viz.render(document.getElementById('mainCanvas'));
     });
 
+    // Cell shape toggle
+    bind('btnCellShape', () => {
+        const shapes = ['rect', 'circle', 'dot'];
+        const current = State.settings.cellShape || 'rect';
+        const next = shapes[(shapes.indexOf(current) + 1) % shapes.length];
+        State.settings.cellShape = next;
+        setText('btnCellShape', `Cell: ${next}`);
+        Viz.render(document.getElementById('mainCanvas'));
+    });
+
+    // Gradient editor
+    renderGradientEditor();
+    bind('btnAddStop', addGradientStop);
+
     // Pattern matching
     bind('btnRunPattern', runPatternUI);
 
@@ -235,15 +249,26 @@ function getPatternSelectedCats() {
     return [...document.querySelectorAll('.pattern-cat-check:checked')].map(cb => cb.value);
 }
 
+function normalizeDate(raw) {
+    if (!raw) return null;
+    // Already YYYY-MM-DD
+    if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+    // Try parsing M/D/YY or M/D/YYYY
+    const d = new Date(raw);
+    if (!isNaN(d.getTime())) return d.toISOString().split('T')[0];
+    return null;
+}
+
 function runPatternUI() {
-    const refDate = document.getElementById('patternDateInput')?.value;
+    const rawDate = document.getElementById('patternDateInput')?.value;
+    const refDate = normalizeDate(rawDate);
     if (!refDate) {
         showMessage('Select a reference date for pattern matching.', 'error');
         return;
     }
 
     if (!State.cache[refDate]) {
-        showMessage(`No data found for ${refDate}.`, 'error');
+        showMessage(`No data found for ${refDate}. Use YYYY-MM-DD or the date picker.`, 'error');
         return;
     }
 
@@ -370,6 +395,11 @@ function updateInsightsPanel() {
 // ============================================================================
 
 function showPanel(name) {
+    if (name === 'main') {
+        const welcome = document.getElementById('panel-welcome');
+        if (welcome) welcome.style.display = 'none';
+        return;
+    }
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     const target = document.getElementById(`panel-${name}`);
     if (target) target.classList.add('active');
@@ -410,6 +440,79 @@ function bind(id, handler) {
 function setText(id, text) {
     const el = document.getElementById(id);
     if (el) el.textContent = text;
+}
+
+// ============================================================================
+// GRADIENT EDITOR
+// ============================================================================
+
+function renderGradientEditor() {
+    const container = document.getElementById('gradientEditor');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    State.settings.gradient.forEach((stop, i) => {
+        const row = document.createElement('div');
+        row.className = 'gradient-stop-row';
+        row.innerHTML = `
+            <input type="number" class="input-number" value="${stop.pos.toFixed(2)}" min="0" max="1" step="0.01"
+                onchange="updateGradientStop(${i}, 'pos', parseFloat(this.value))">
+            <input type="color" value="${rgbToHex(stop.r, stop.g, stop.b)}"
+                onchange="updateGradientStopColor(${i}, this.value)">
+            <button class="btn-small" onclick="removeGradientStop(${i})">✕</button>
+        `;
+        container.appendChild(row);
+    });
+}
+
+function updateGradientStop(i, key, value) {
+    State.settings.gradient[i][key] = value;
+    State.settings.gradient.sort((a, b) => a.pos - b.pos);
+    renderGradientEditor();
+    Viz.render(document.getElementById('mainCanvas'));
+}
+
+function updateGradientStopColor(i, hex) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    State.settings.gradient[i].r = r;
+    State.settings.gradient[i].g = g;
+    State.settings.gradient[i].b = b;
+    Viz.render(document.getElementById('mainCanvas'));
+}
+
+function addGradientStop() {
+    // Add a stop at the midpoint of the largest gap
+    const stops = State.settings.gradient;
+    let maxGap = 0;
+    let insertPos = 0.5;
+    for (let i = 0; i < stops.length - 1; i++) {
+        const gap = stops[i + 1].pos - stops[i].pos;
+        if (gap > maxGap) {
+            maxGap = gap;
+            insertPos = (stops[i].pos + stops[i + 1].pos) / 2;
+        }
+    }
+    State.settings.gradient.push({ pos: insertPos, r: 128, g: 128, b: 128 });
+    State.settings.gradient.sort((a, b) => a.pos - b.pos);
+    renderGradientEditor();
+    Viz.render(document.getElementById('mainCanvas'));
+}
+
+function removeGradientStop(i) {
+    if (State.settings.gradient.length <= 2) {
+        showMessage('Need at least 2 gradient stops.', 'error');
+        return;
+    }
+    State.settings.gradient.splice(i, 1);
+    renderGradientEditor();
+    Viz.render(document.getElementById('mainCanvas'));
+}
+
+function rgbToHex(r, g, b) {
+    return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
 }
 
 // Alias so math.js getDivergence is accessible here without name collision
