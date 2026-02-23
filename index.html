@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMLADRIS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="messageContainer"></div>
+
+<!-- ============================================================
+     HEADER
+     ============================================================ -->
+<header class="app-header">
+    <div class="header-title">IMLADRIS</div>
+    <div class="header-sub">Integrated Models Linking Analytics Directly, Retroactively, and In-Situ</div>
+</header>
+
+<!-- ============================================================
+     MAIN LAYOUT
+     ============================================================ -->
+<div class="app-layout">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+
+        <!-- File Load -->
+        <div class="panel-section">
+            <div class="section-header" onclick="toggleCollapsible('load')">
+                <span class="section-title">Load Data</span>
+                <span class="collapse-icon" id="load-icon">▼</span>
+            </div>
+            <div class="section-content" id="load-content">
+                <input type="file" id="fileInput" accept=".csv" class="file-input">
+                <label for="fileInput" class="btn btn-primary">Choose CSV</label>
+            </div>
+        </div>
+
+        <!-- Animation Controls -->
+        <div class="panel-section">
+            <div class="section-header" onclick="toggleCollapsible('anim')">
+                <span class="section-title">Animation</span>
+                <span class="collapse-icon" id="anim-icon">▼</span>
+            </div>
+            <div class="section-content" id="anim-content">
+                <div class="control-row">
+                    <button id="btnStepBack" class="btn btn-sm">◀</button>
+                    <button id="btnPlay" class="btn btn-primary btn-sm">▶ Play</button>
+                    <button id="btnStepForward" class="btn btn-sm">▶</button>
+                </div>
+                <div class="control-row">
+                    <button id="btnDirectionToggle" class="btn btn-sm">→ Forward</button>
+                    <button id="btnResetLatest" class="btn btn-sm">⟳ Latest</button>
+                </div>
+                <div class="control-row">
+                    <label class="control-label">Speed</label>
+                    <input type="range" id="speedSlider" min="100" max="2000" step="50" value="500" class="slider">
+                    <span id="speedLabel" class="control-value">500ms</span>
+                </div>
+                <div class="control-row">
+                    <label class="control-label">Jump to</label>
+                    <input type="date" id="jumpDateInput" class="input-date">
+                    <button id="btnJumpDate" class="btn btn-sm">Go</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Controls -->
+        <div class="panel-section">
+            <div class="section-header" onclick="toggleCollapsible('view')">
+                <span class="section-title">View</span>
+                <span class="collapse-icon" id="view-icon">▼</span>
+            </div>
+            <div class="section-content" id="view-content">
+                <div class="control-row">
+                    <label class="control-label">Window</label>
+                    <input type="number" id="windowSizeInput" min="7" max="730" value="90" class="input-number">
+                    <span class="control-value">days</span>
+                </div>
+                <div class="control-row">
+                    <button id="btnColorMode" class="btn btn-sm">Color: Rank</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="panel-section">
+            <div class="section-header" onclick="toggleCollapsible('cats')">
+                <span class="section-title">Categories</span>
+                <span class="collapse-icon" id="cats-icon">▼</span>
+            </div>
+            <div class="section-content" id="cats-content">
+                <div id="categoryList" class="category-list">
+                    <div class="info-text">Load data to see categories.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Divergence / Insights -->
+        <div class="panel-section">
+            <div class="section-header" onclick="toggleCollapsible('insights')">
+                <span class="section-title">Divergence</span>
+                <span class="collapse-icon" id="insights-icon">▼</span>
+            </div>
+            <div class="section-content" id="insights-content">
+                <div id="insightsPanel">
+                    <div class="info-text">Load data to see divergence analysis.</div>
+                </div>
+            </div>
+        </div>
+
+    </aside>
+
+    <!-- MAIN CANVAS AREA -->
+    <main class="canvas-area">
+        <div class="canvas-wrapper">
+            <canvas id="mainCanvas"></canvas>
+        </div>
+        <div id="panel-welcome" class="panel welcome-panel">
+            <div class="welcome-title">IMLADRIS</div>
+            <div class="welcome-sub">Load a CSV file to begin.</div>
+        </div>
+    </main>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside class="sidebar sidebar-right">
+
+        <!-- Pattern Matching -->
+        <div class="panel-section">
+            <div class="section-header" onclick="toggleCollapsible('pattern')">
+                <span class="section-title">Pattern Match</span>
+                <span class="collapse-icon" id="pattern-icon">▼</span>
+            </div>
+            <div class="section-content" id="pattern-content">
+                <div class="control-row">
+                    <input type="date" id="patternDateInput" class="input-date">
+                    <button id="btnPatternUseCurrentDate" class="btn btn-sm">Use Current</button>
+                </div>
+                <div class="control-row">
+                    <button id="btnRunPattern" class="btn btn-primary btn-sm">Find Similar Days</button>
+                </div>
+                <div class="pattern-cat-header">Categories</div>
+                <div id="patternCatSelector" class="pattern-cat-selector">
+                    <div class="info-text">Load data to select categories.</div>
+                </div>
+                <div id="patternResults" class="pattern-results">
+                    <div class="info-text">Run a pattern match to see results.</div>
+                </div>
+            </div>
+        </div>
+
+    </aside>
+
+</div>
+
+<!-- ============================================================
+     SCRIPTS — load order matters
+     ============================================================ -->
+<script src="state.js"></script>
+<script src="math.js"></script>
+<script src="data.js"></script>
+<script src="pattern.js"></script>
+<script src="visualization.js"></script>
+<script src="animation.js"></script>
+<script src="ui.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', initUI);
+</script>
+
+</body>
+</html>
