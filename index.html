@@ -81,7 +81,21 @@
                 </div>
                 <div class="control-row">
                     <button id="btnColorMode" class="btn btn-sm">Color: Rank</button>
+                    <button id="btnCellShape" class="btn btn-sm">Cell: rect</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Gradient Editor -->
+        <div class="panel-section">
+            <div class="section-header" onclick="toggleCollapsible('gradient')">
+                <span class="section-title">Gradient</span>
+                <span class="collapse-icon" id="gradient-icon">▼</span>
+            </div>
+            <div class="section-content" id="gradient-content">
+                <div id="gradientEditor" class="gradient-editor"></div>
+                <button id="btnAddStop" class="btn btn-sm" style="margin-top:0.4rem;">+ Add Stop</button>
+                <div class="info-text" style="margin-top:0.4rem;">pos: 0=worst, 1=best</div>
             </div>
         </div>
 
@@ -135,7 +149,7 @@
             </div>
             <div class="section-content" id="pattern-content">
                 <div class="control-row">
-                    <input type="date" id="patternDateInput" class="input-date">
+                    <input type="text" id="patternDateInput" class="input-date" placeholder="YYYY-MM-DD">
                     <button id="btnPatternUseCurrentDate" class="btn btn-sm">Use Current</button>
                 </div>
                 <div class="control-row">
