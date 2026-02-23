@@ -251,11 +251,15 @@ function getPatternSelectedCats() {
 
 function normalizeDate(raw) {
     if (!raw) return null;
+    raw = raw.trim();
     // Already YYYY-MM-DD
     if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
-    // Try parsing M/D/YY or M/D/YYYY
-    const d = new Date(raw);
-    if (!isNaN(d.getTime())) return d.toISOString().split('T')[0];
+    // M/D/YYYY or MM/DD/YYYY — require 4-digit year
+    const mdyMatch = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (mdyMatch) {
+        const [, m, d, y] = mdyMatch;
+        return `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
+    }
     return null;
 }
 
