@@ -83,6 +83,13 @@
                     <button id="btnColorMode" class="btn btn-sm">Color: Rank</button>
                     <button id="btnCellShape" class="btn btn-sm">Cell: rect</button>
                 </div>
+                <div class="control-row" style="margin-top:0.4rem;">
+                    <button id="btnSaveSettings" class="btn btn-sm">⬇ Save Settings</button>
+                </div>
+                <div class="control-row">
+                    <input type="file" id="settingsFileInput" accept=".json" style="display:none">
+                    <label for="settingsFileInput" class="btn btn-sm" style="cursor:pointer;">⬆ Load Settings</label>
+                </div>
             </div>
         </div>
 
@@ -149,7 +156,7 @@
             </div>
             <div class="section-content" id="pattern-content">
                 <div class="control-row">
-                    <input type="text" id="patternDateInput" class="input-date" placeholder="YYYY-MM-DD or M/D/YYYY">
+                    <input type="text" id="patternDateInput" class="input-date" placeholder="YYYY-MM-DD">
                     <button id="btnPatternUseCurrentDate" class="btn btn-sm">Use Current</button>
                 </div>
                 <div class="control-row">
