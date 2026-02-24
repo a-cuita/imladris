@@ -506,7 +506,7 @@ width: 50px;
 MOBILE — viewing/animation optimized
 ============================================================ */
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
 
 ```
 /* Hide both sidebars */
@@ -618,7 +618,7 @@ MOBILE — viewing/animation optimized
 }
 
 /* Hide mobile bar on desktop */
-@media (min-width: 769px) {
+@media (min-width: 1025px) {
 .mobile-bar,
 .mobile-drawer {
 display: none;
@@ -637,7 +637,7 @@ color-scheme: dark;
 MOBILE SIDEBAR OVERRIDE — force hide with !important
 ============================================================ */
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
 .sidebar,
 .sidebar-right {
 display: none !important;
