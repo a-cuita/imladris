@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -13,6 +14,7 @@
 <!-- ============================================================
      HEADER
      ============================================================ -->
+
 <header class="app-header">
     <div class="header-title">IMLADRIS</div>
     <div class="header-sub">Integrated Models Linking Analytics Directly, Retroactively, and In-Situ</div>
@@ -21,173 +23,223 @@
 <!-- ============================================================
      MAIN LAYOUT
      ============================================================ -->
+
 <div class="app-layout">
 
-    <!-- LEFT SIDEBAR -->
-    <aside class="sidebar">
+```
+<!-- LEFT SIDEBAR -->
+<aside class="sidebar">
 
-        <!-- File Load -->
-        <div class="panel-section">
-            <div class="section-header" onclick="toggleCollapsible('load')">
-                <span class="section-title">Load Data</span>
-                <span class="collapse-icon" id="load-icon">▼</span>
+    <!-- File Load -->
+    <div class="panel-section">
+        <div class="section-header" onclick="toggleCollapsible('load')">
+            <span class="section-title">Load Data</span>
+            <span class="collapse-icon" id="load-icon">▼</span>
+        </div>
+        <div class="section-content" id="load-content">
+            <input type="file" id="fileInput" accept=".csv" class="file-input">
+            <label for="fileInput" class="btn btn-primary">Choose CSV</label>
+        </div>
+    </div>
+
+    <!-- Animation Controls -->
+    <div class="panel-section">
+        <div class="section-header" onclick="toggleCollapsible('anim')">
+            <span class="section-title">Animation</span>
+            <span class="collapse-icon" id="anim-icon">▼</span>
+        </div>
+        <div class="section-content" id="anim-content">
+            <div class="control-row">
+                <button id="btnStepBack" class="btn btn-sm">◀</button>
+                <button id="btnPlay" class="btn btn-primary btn-sm">▶ Play</button>
+                <button id="btnStepForward" class="btn btn-sm">▶</button>
             </div>
-            <div class="section-content" id="load-content">
-                <input type="file" id="fileInput" accept=".csv" class="file-input">
-                <label for="fileInput" class="btn btn-primary">Choose CSV</label>
+            <div class="control-row">
+                <button id="btnDirectionToggle" class="btn btn-sm">→ Forward</button>
+                <button id="btnResetLatest" class="btn btn-sm">⟳ Latest</button>
+            </div>
+            <div class="control-row">
+                <label class="control-label">Speed</label>
+                <input type="range" id="speedSlider" min="100" max="2000" step="50" value="500" class="slider">
+                <span id="speedLabel" class="control-value">500ms</span>
+            </div>
+            <div class="control-row">
+                <label class="control-label">Jump to</label>
+                <input type="date" id="jumpDateInput" class="input-date">
+                <button id="btnJumpDate" class="btn btn-sm">Go</button>
             </div>
         </div>
+    </div>
 
-        <!-- Animation Controls -->
-        <div class="panel-section">
-            <div class="section-header" onclick="toggleCollapsible('anim')">
-                <span class="section-title">Animation</span>
-                <span class="collapse-icon" id="anim-icon">▼</span>
+    <!-- View Controls -->
+    <div class="panel-section">
+        <div class="section-header" onclick="toggleCollapsible('view')">
+            <span class="section-title">View</span>
+            <span class="collapse-icon" id="view-icon">▼</span>
+        </div>
+        <div class="section-content" id="view-content">
+            <div class="control-row">
+                <label class="control-label">Window</label>
+                <input type="number" id="windowSizeInput" min="7" max="730" value="90" class="input-number">
+                <span class="control-value">days</span>
             </div>
-            <div class="section-content" id="anim-content">
-                <div class="control-row">
-                    <button id="btnStepBack" class="btn btn-sm">◀</button>
-                    <button id="btnPlay" class="btn btn-primary btn-sm">▶ Play</button>
-                    <button id="btnStepForward" class="btn btn-sm">▶</button>
-                </div>
-                <div class="control-row">
-                    <button id="btnDirectionToggle" class="btn btn-sm">→ Forward</button>
-                    <button id="btnResetLatest" class="btn btn-sm">⟳ Latest</button>
-                </div>
-                <div class="control-row">
-                    <label class="control-label">Speed</label>
-                    <input type="range" id="speedSlider" min="100" max="2000" step="50" value="500" class="slider">
-                    <span id="speedLabel" class="control-value">500ms</span>
-                </div>
-                <div class="control-row">
-                    <label class="control-label">Jump to</label>
-                    <input type="date" id="jumpDateInput" class="input-date">
-                    <button id="btnJumpDate" class="btn btn-sm">Go</button>
-                </div>
+            <div class="control-row">
+                <button id="btnColorMode" class="btn btn-sm">Color: Rank</button>
+                <button id="btnCellShape" class="btn btn-sm">Cell: rect</button>
+            </div>
+            <div class="control-row">
+                <button id="btnSortMode" class="btn btn-sm">Sort: Normal</button>
+            </div>
+            <div class="control-row" style="margin-top:0.4rem;">
+                <button id="btnSaveSettings" class="btn btn-sm">⬇ Save Settings</button>
+            </div>
+            <div class="control-row">
+                <input type="file" id="settingsFileInput" accept=".json" style="display:none">
+                <label for="settingsFileInput" class="btn btn-sm" style="cursor:pointer;">⬆ Load Settings</label>
             </div>
         </div>
+    </div>
 
-        <!-- View Controls -->
-        <div class="panel-section">
-            <div class="section-header" onclick="toggleCollapsible('view')">
-                <span class="section-title">View</span>
-                <span class="collapse-icon" id="view-icon">▼</span>
-            </div>
-            <div class="section-content" id="view-content">
-                <div class="control-row">
-                    <label class="control-label">Window</label>
-                    <input type="number" id="windowSizeInput" min="7" max="730" value="90" class="input-number">
-                    <span class="control-value">days</span>
-                </div>
-                <div class="control-row">
-                    <button id="btnColorMode" class="btn btn-sm">Color: Rank</button>
-                    <button id="btnCellShape" class="btn btn-sm">Cell: rect</button>
-                </div>
-                <div class="control-row">
-                    <button id="btnSortMode" class="btn btn-sm">Sort: Normal</button>
-                </div>
-                <div class="control-row" style="margin-top:0.4rem;">
-                    <button id="btnSaveSettings" class="btn btn-sm">⬇ Save Settings</button>
-                </div>
-                <div class="control-row">
-                    <input type="file" id="settingsFileInput" accept=".json" style="display:none">
-                    <label for="settingsFileInput" class="btn btn-sm" style="cursor:pointer;">⬆ Load Settings</label>
-                </div>
+    <!-- Gradient Editor -->
+    <div class="panel-section">
+        <div class="section-header" onclick="toggleCollapsible('gradient')">
+            <span class="section-title">Gradient</span>
+            <span class="collapse-icon" id="gradient-icon">▼</span>
+        </div>
+        <div class="section-content" id="gradient-content">
+            <div id="gradientEditor" class="gradient-editor"></div>
+            <button id="btnAddStop" class="btn btn-sm" style="margin-top:0.4rem;">+ Add Stop</button>
+            <div class="info-text" style="margin-top:0.4rem;">pos: 0=worst, 1=best</div>
+        </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="panel-section">
+        <div class="section-header" onclick="toggleCollapsible('cats')">
+            <span class="section-title">Categories</span>
+            <span class="collapse-icon" id="cats-icon">▼</span>
+        </div>
+        <div class="section-content" id="cats-content">
+            <div id="categoryList" class="category-list">
+                <div class="info-text">Load data to see categories.</div>
             </div>
         </div>
+    </div>
 
-        <!-- Gradient Editor -->
-        <div class="panel-section">
-            <div class="section-header" onclick="toggleCollapsible('gradient')">
-                <span class="section-title">Gradient</span>
-                <span class="collapse-icon" id="gradient-icon">▼</span>
-            </div>
-            <div class="section-content" id="gradient-content">
-                <div id="gradientEditor" class="gradient-editor"></div>
-                <button id="btnAddStop" class="btn btn-sm" style="margin-top:0.4rem;">+ Add Stop</button>
-                <div class="info-text" style="margin-top:0.4rem;">pos: 0=worst, 1=best</div>
+    <!-- Divergence / Insights -->
+    <div class="panel-section">
+        <div class="section-header" onclick="toggleCollapsible('insights')">
+            <span class="section-title">Divergence</span>
+            <span class="collapse-icon" id="insights-icon">▼</span>
+        </div>
+        <div class="section-content" id="insights-content">
+            <div id="insightsPanel">
+                <div class="info-text">Load data to see divergence analysis.</div>
             </div>
         </div>
+    </div>
 
-        <!-- Categories -->
-        <div class="panel-section">
-            <div class="section-header" onclick="toggleCollapsible('cats')">
-                <span class="section-title">Categories</span>
-                <span class="collapse-icon" id="cats-icon">▼</span>
+</aside>
+
+<!-- MAIN CANVAS AREA -->
+<main class="canvas-area">
+    <div class="canvas-wrapper">
+        <canvas id="mainCanvas"></canvas>
+    </div>
+    <div id="panel-welcome" class="panel welcome-panel">
+        <div class="welcome-title">IMLADRIS</div>
+        <div class="welcome-sub">Load a CSV file to begin.</div>
+    </div>
+</main>
+
+<!-- RIGHT SIDEBAR -->
+<aside class="sidebar sidebar-right">
+
+    <!-- Pattern Matching -->
+    <div class="panel-section">
+        <div class="section-header" onclick="toggleCollapsible('pattern')">
+            <span class="section-title">Pattern Match</span>
+            <span class="collapse-icon" id="pattern-icon">▼</span>
+        </div>
+        <div class="section-content" id="pattern-content">
+            <div class="control-row">
+                <input type="text" id="patternDateInput" class="input-date" placeholder="YYYY-MM-DD">
+                <button id="btnPatternUseCurrentDate" class="btn btn-sm">Use Current</button>
             </div>
-            <div class="section-content" id="cats-content">
-                <div id="categoryList" class="category-list">
-                    <div class="info-text">Load data to see categories.</div>
-                </div>
+            <div class="control-row">
+                <button id="btnRunPattern" class="btn btn-primary btn-sm">Find Similar Days</button>
+            </div>
+            <div class="pattern-cat-header">Categories</div>
+            <div id="patternCatSelector" class="pattern-cat-selector">
+                <div class="info-text">Load data to select categories.</div>
+            </div>
+            <div id="patternResults" class="pattern-results">
+                <div class="info-text">Run a pattern match to see results.</div>
             </div>
         </div>
+    </div>
 
-        <!-- Divergence / Insights -->
-        <div class="panel-section">
-            <div class="section-header" onclick="toggleCollapsible('insights')">
-                <span class="section-title">Divergence</span>
-                <span class="collapse-icon" id="insights-icon">▼</span>
-            </div>
-            <div class="section-content" id="insights-content">
-                <div id="insightsPanel">
-                    <div class="info-text">Load data to see divergence analysis.</div>
-                </div>
-            </div>
-        </div>
+</aside>
+```
 
-    </aside>
+</div>
 
-    <!-- MAIN CANVAS AREA -->
-    <main class="canvas-area">
-        <div class="canvas-wrapper">
-            <canvas id="mainCanvas"></canvas>
-        </div>
-        <div id="panel-welcome" class="panel welcome-panel">
-            <div class="welcome-title">IMLADRIS</div>
-            <div class="welcome-sub">Load a CSV file to begin.</div>
-        </div>
-    </main>
+<!-- ============================================================
+     MOBILE BAR + DRAWER
+     ============================================================ -->
 
-    <!-- RIGHT SIDEBAR -->
-    <aside class="sidebar sidebar-right">
+<!-- Bottom bar — always visible on mobile -->
 
-        <!-- Pattern Matching -->
-        <div class="panel-section">
-            <div class="section-header" onclick="toggleCollapsible('pattern')">
-                <span class="section-title">Pattern Match</span>
-                <span class="collapse-icon" id="pattern-icon">▼</span>
-            </div>
-            <div class="section-content" id="pattern-content">
-                <div class="control-row">
-                    <input type="text" id="patternDateInput" class="input-date" placeholder="YYYY-MM-DD">
-                    <button id="btnPatternUseCurrentDate" class="btn btn-sm">Use Current</button>
-                </div>
-                <div class="control-row">
-                    <button id="btnRunPattern" class="btn btn-primary btn-sm">Find Similar Days</button>
-                </div>
-                <div class="pattern-cat-header">Categories</div>
-                <div id="patternCatSelector" class="pattern-cat-selector">
-                    <div class="info-text">Load data to select categories.</div>
-                </div>
-                <div id="patternResults" class="pattern-results">
-                    <div class="info-text">Run a pattern match to see results.</div>
-                </div>
-            </div>
-        </div>
+<div class="mobile-bar">
+    <button id="mBtnBack" class="btn btn-sm">◀</button>
+    <button id="mBtnPlay" class="btn btn-primary btn-sm">▶</button>
+    <button id="mBtnForward" class="btn btn-sm">▶▶</button>
+    <button id="mBtnDir" class="btn btn-sm">→</button>
+    <button id="mBtnDrawer" class="btn btn-sm">⚙</button>
+</div>
 
-    </aside>
+<!-- Drawer — slides up from bottom bar -->
 
+<div class="mobile-drawer" id="mobileDrawer">
+    <div class="mobile-drawer-title">Speed</div>
+    <div class="control-row">
+        <input type="range" id="mSpeedSlider" min="100" max="2000" step="50" value="500" class="slider" style="flex:1">
+        <span id="mSpeedLabel" class="control-value">500ms</span>
+    </div>
+    <div class="mobile-drawer-title" style="margin-top:0.5rem;">View</div>
+    <div class="control-row">
+        <button id="mBtnColorMode" class="btn btn-sm">Color: Rank</button>
+        <button id="mBtnSortMode" class="btn btn-sm">Sort: Normal</button>
+    </div>
+    <div class="control-row">
+        <label class="control-label">Window</label>
+        <input type="number" id="mWindowSize" min="7" max="730" value="90" class="input-number">
+        <span class="control-value">days</span>
+    </div>
+    <div class="mobile-drawer-title" style="margin-top:0.5rem;">Jump To</div>
+    <div class="control-row">
+        <input type="text" id="mJumpDate" class="input-date" placeholder="YYYY-MM-DD" style="flex:1">
+        <button id="mBtnJump" class="btn btn-sm">Go</button>
+        <button id="mBtnLatest" class="btn btn-sm">Latest</button>
+    </div>
 </div>
 
 <!-- ============================================================
      SCRIPTS — load order matters
      ============================================================ -->
+
 <script src="state.js"></script>
+
 <script src="math.js"></script>
+
 <script src="data.js"></script>
+
 <script src="pattern.js"></script>
+
 <script src="visualization.js"></script>
+
 <script src="animation.js"></script>
+
 <script src="ui.js"></script>
 
 <script>
