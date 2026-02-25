@@ -713,3 +713,18 @@ body::before {
 ```
 
 }
+
+/* ============================================================
+DRAWER VISIBILITY — use display instead of transform
+============================================================ */
+
+@media (max-width: 1024px) {
+.mobile-drawer {
+transform: none !important;
+display: none !important;
+}
+.mobile-drawer.open {
+display: flex !important;
+flex-direction: column;
+}
+}
