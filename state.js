@@ -79,7 +79,7 @@ const State = {
         // 'rank'   — color assigned by rank position (0=worst, 1=best), fully stretched every day
         // 'zscore' — color assigned by actual signed z-score, anchored to zScoreRange
         colorMode: 'rank',
-        cellShape: 'rect',       // 'rect' | 'circle' | 'dot'
+        cellShape: 'square',     // 'square' | 'dot' | 'shape-by-rank'
         sortMode: 'normal',     // 'normal' | 'middleOut'
         zScoreRange: 3,          // z-score value mapped to gradient endpoints (mode: zscore only)
 
