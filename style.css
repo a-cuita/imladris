@@ -671,3 +671,13 @@ z-index: 9999;
 font-size: 12px;
 }
 }
+
+/* Fix drawer content bleed */
+@media (max-width: 1024px) {
+.mobile-drawer {
+overflow: hidden;
+}
+.mobile-drawer.open {
+overflow-y: auto;
+}
+}
