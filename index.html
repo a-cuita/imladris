@@ -202,9 +202,9 @@
 <div class="mobile-drawer" id="mobileDrawer">
     <div class="mobile-drawer-title">Data</div>
     <div class="control-row">
-        <input type="file" id="mFileInput" accept=".csv" style="display:none">
+        <input type="file" id="mFileInput" accept=".csv" style="display:none" onchange="Data.handleFileInput(event)">
         <label for="mFileInput" class="btn btn-primary btn-sm" style="flex:1;text-align:center;cursor:pointer;">Choose CSV</label>
-        <input type="file" id="mSettingsInput" accept=".json" style="display:none">
+        <input type="file" id="mSettingsInput" accept=".json" style="display:none" onchange="loadSettings(this.files[0])">
         <label for="mSettingsInput" class="btn btn-sm" style="flex:1;text-align:center;cursor:pointer;">Load Settings</label>
     </div>
     <div class="mobile-drawer-title">Speed</div>
