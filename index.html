@@ -14,8 +14,10 @@
      HEADER
      ============================================================ -->
 <header class="app-header">
+    <button class="sidebar-toggle" onclick="document.getElementById('sidebarLeft').classList.toggle('open')">☰</button>
     <div class="header-title">IMLADRIS</div>
     <div class="header-sub">Integrated Models Linking Analytics Directly, Retroactively, and In-Situ</div>
+    <button class="sidebar-toggle sidebar-toggle-right" onclick="document.getElementById('sidebarRight').classList.toggle('open')">⊞</button>
 </header>
 
 <!-- ============================================================
@@ -24,7 +26,7 @@
 <div class="app-layout">
 
     <!-- LEFT SIDEBAR -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebarLeft">
 
         <!-- File Load -->
         <div class="panel-section">
@@ -149,7 +151,7 @@
     </main>
 
     <!-- RIGHT SIDEBAR -->
-    <aside class="sidebar sidebar-right">
+    <aside class="sidebar sidebar-right" id="sidebarRight">
 
         <!-- Pattern Matching -->
         <div class="panel-section">
