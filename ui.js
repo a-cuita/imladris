@@ -131,13 +131,14 @@ function bindControls() {
     const settingsFileInput = document.getElementById('settingsFileInput');
     if (settingsFileInput) settingsFileInput.addEventListener('change', (e) => loadSettings(e.target.files[0]));
 
-    // Cell shape toggle
+    // Cell shape toggle — square > dot > shape-by-rank > square
     bind('btnCellShape', () => {
-        const shapes = ['rect', 'circle', 'dot'];
-        const current = State.settings.cellShape || 'rect';
+        const shapes = ['square', 'dot', 'shape-by-rank'];
+        const current = State.settings.cellShape || 'square';
         const next = shapes[(shapes.indexOf(current) + 1) % shapes.length];
         State.settings.cellShape = next;
-        setText('btnCellShape', `Cell: ${next}`);
+        const labels = { 'square': 'Cell: Square', 'dot': 'Cell: Dot', 'shape-by-rank': 'Cell: Shape' };
+        setText('btnCellShape', labels[next]);
         Viz.render(document.getElementById('mainCanvas'));
     });
 
@@ -566,7 +567,8 @@ function loadSettings(file) {
                 if (el) el.value = s.windowSize;
             }
             setText('btnColorMode', State.settings.colorMode === 'rank' ? 'Color: Rank' : 'Color: Z-Score');
-            setText('btnCellShape', `Cell: ${State.settings.cellShape}`);
+            const shapeLabels = { 'square': 'Cell: Square', 'dot': 'Cell: Dot', 'shape-by-rank': 'Cell: Shape' };
+            setText('btnCellShape', shapeLabels[State.settings.cellShape] || 'Cell: Square');
             setText('btnSortMode', State.settings.sortMode === 'normal' ? 'Sort: Normal' : 'Sort: Middle-Out');
             renderGradientEditor();
             Viz.render(document.getElementById('mainCanvas'));
