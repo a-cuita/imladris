@@ -189,12 +189,14 @@
      MOBILE BAR + DRAWER
      ============================================================ -->
 
+<div class="mobile-drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+
 <div class="mobile-bar">
     <button id="mBtnBack" class="btn btn-sm">◀</button>
     <button id="mBtnPlay" class="btn btn-primary btn-sm">▶</button>
     <button id="mBtnForward" class="btn btn-sm">▶▶</button>
     <button id="mBtnDir" class="btn btn-sm">→</button>
-    <button id="mBtnDrawer" class="btn btn-sm" onclick="document.getElementById('mobileDrawer').classList.toggle('open')">⚙</button>
+    <button id="mBtnDrawer" class="btn btn-sm" onclick="toggleDrawer()">⚙</button>
 </div>
 
 <div class="mobile-drawer" id="mobileDrawer">
