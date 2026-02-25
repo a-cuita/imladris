@@ -681,3 +681,35 @@ overflow: hidden;
 overflow-y: auto;
 }
 }
+
+/* ============================================================
+MOBILE DRAWER — backdrop + cleanup
+============================================================ */
+
+@media (max-width: 1024px) {
+/* Backdrop */
+.mobile-drawer-backdrop {
+display: none;
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,0.6);
+z-index: 198;
+}
+.mobile-drawer-backdrop.open {
+display: block;
+}
+
+```
+/* Drawer solid background */
+.mobile-drawer {
+    background: var(--bg-surface) !important;
+    border-top: 2px solid var(--border) !important;
+}
+
+/* Remove debug label */
+body::before {
+    display: none !important;
+}
+```
+
+}
