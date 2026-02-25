@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
     <meta name="color-scheme" content="dark">
     <title>IMLADRIS</title>
     <link rel="stylesheet" href="style.css">
@@ -202,6 +202,13 @@
 <!-- Drawer — slides up from bottom bar -->
 
 <div class="mobile-drawer" id="mobileDrawer">
+    <div class="mobile-drawer-title">Data</div>
+    <div class="control-row">
+        <input type="file" id="mFileInput" accept=".csv" style="display:none">
+        <label for="mFileInput" class="btn btn-primary btn-sm" style="flex:1;text-align:center;cursor:pointer;">Choose CSV</label>
+        <input type="file" id="mSettingsInput" accept=".json" style="display:none">
+        <label for="mSettingsInput" class="btn btn-sm" style="flex:1;text-align:center;cursor:pointer;">Load Settings</label>
+    </div>
     <div class="mobile-drawer-title">Speed</div>
     <div class="control-row">
         <input type="range" id="mSpeedSlider" min="100" max="2000" step="50" value="500" class="slider" style="flex:1">
