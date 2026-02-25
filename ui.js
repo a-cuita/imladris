@@ -164,6 +164,22 @@ bind('btnPatternUseCurrentDate', () => {
 // MOBILE CONTROLS
 // ============================================================================
 
+function toggleDrawer() {
+const drawer = document.getElementById(‘mobileDrawer’);
+const backdrop = document.getElementById(‘drawerBackdrop’);
+if (!drawer) return;
+const isOpen = drawer.classList.contains(‘open’);
+drawer.classList.toggle(‘open’, !isOpen);
+if (backdrop) backdrop.classList.toggle(‘open’, !isOpen);
+}
+
+function closeDrawer() {
+const drawer = document.getElementById(‘mobileDrawer’);
+const backdrop = document.getElementById(‘drawerBackdrop’);
+if (drawer) drawer.classList.remove(‘open’);
+if (backdrop) backdrop.classList.remove(‘open’);
+}
+
 function bindMobileControls() {
 const canvas = document.getElementById(‘mainCanvas’);
 
@@ -188,10 +204,7 @@ bind('mBtnDir', () => {
     setText('mBtnDir', newDir === 1 ? '→' : '←');
 });
 
-bind('mBtnDrawer', () => {
-    const drawer = document.getElementById('mobileDrawer');
-    if (drawer) drawer.classList.toggle('open');
-});
+bind('mBtnDrawer', toggleDrawer);
 
 // Drawer controls
 const mSpeed = document.getElementById('mSpeedSlider');
@@ -243,6 +256,13 @@ bind('mBtnJump', () => {
 });
 
 bind('mBtnLatest', () => Anim.resetToLatest(canvas));
+
+// Mobile file inputs
+const mFileInput = document.getElementById('mFileInput');
+if (mFileInput) mFileInput.addEventListener('change', Data.handleFileInput);
+
+const mSettingsInput = document.getElementById('mSettingsInput');
+if (mSettingsInput) mSettingsInput.addEventListener('change', (e) => loadSettings(e.target.files[0]));
 
 // Touch events — swipe left/right, tap to play/pause
 let touchStartX = null;
