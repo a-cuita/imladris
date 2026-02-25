@@ -234,7 +234,11 @@ font-size: 0.7rem;
 }
 
 .file-input {
-display: none;
+opacity: 0;
+position: absolute;
+width: 1px;
+height: 1px;
+overflow: hidden;
 }
 
 /* ============================================================
