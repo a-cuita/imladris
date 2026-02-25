@@ -16,7 +16,7 @@ const VIZ = {
     marginBottom: 60,   // Date label area
 
     // Row heights
-    cellHeight: 18,     // Heatmap row height per category
+    cellHeight: 18,     // Heatmap row height per category — overridden dynamically by mode
 
     // Fonts
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif',
@@ -77,6 +77,10 @@ function render(canvas) {
         sortedCats = rankSorted;
     }
 
+    // Dynamic row height by cell mode
+    const cellMode = State.settings.cellShape || 'square';
+    VIZ.cellHeight = (cellMode === 'dot' || cellMode === 'shape-by-rank') ? 10 : 18;
+
     const numCats = sortedCats.length;
     const numDates = visibleDates.length;
 
@@ -118,16 +122,24 @@ function render(canvas) {
 
             const rank = cached.ranks[cat];
             const isBlank = rank === refRank;
+            const mode = State.settings.cellShape || 'square';
+
             if (isBlank) {
-                ctx.fillStyle = VIZ.blankCell;
-                drawCell(ctx, x, y, cellWidth, VIZ.cellHeight, State.settings.cellShape || 'rect');
+                // shape-by-rank blank = very dim square; others = blankCell fill
+                if (mode === 'shape-by-rank') {
+                    ctx.fillStyle = 'rgba(80,80,90,0.18)';
+                    drawCell(ctx, x, y, cellWidth, VIZ.cellHeight, 'blank-square');
+                } else {
+                    ctx.fillStyle = VIZ.blankCell;
+                    drawCell(ctx, x, y, cellWidth, VIZ.cellHeight, mode);
+                }
                 return;
             }
 
             const z = cached.zScores[cat];
             if (z === undefined || z === null) {
                 ctx.fillStyle = '#1f2937';
-                drawCell(ctx, x, y, cellWidth, VIZ.cellHeight, 'rect');
+                drawCell(ctx, x, y, cellWidth, VIZ.cellHeight, 'blank-square');
                 return;
             }
 
@@ -141,7 +153,7 @@ function render(canvas) {
             }
 
             ctx.fillStyle = gradientColor(pos, State.settings.gradient);
-            drawCell(ctx, x, y, cellWidth, VIZ.cellHeight, State.settings.cellShape || 'rect');
+            drawCell(ctx, x, y, cellWidth, VIZ.cellHeight, mode, rank);
         });
     });
 
@@ -273,21 +285,63 @@ function render(canvas) {
 // CELL SHAPE RENDERER
 // ============================================================================
 
-function drawCell(ctx, x, y, w, h, shape) {
+function drawCell(ctx, x, y, w, h, shape, rank) {
     const pad = 1;
+    const cx = x + w / 2;
+    const cy = y + h / 2;
+    const size = Math.max(2, Math.min(w, h) - pad * 2);
+    const half = size / 2;
+
     switch (shape) {
-        case 'circle': {
-            const r = Math.max(1, Math.min(w, h) / 2 - pad);
-            ctx.beginPath();
-            ctx.arc(x + w / 2, y + h / 2, r, 0, Math.PI * 2);
-            ctx.fill();
+        case 'square': {
+            // Equal width/height square
+            ctx.fillRect(cx - half, cy - half, size, size);
             break;
         }
         case 'dot': {
-            const r = Math.max(1, Math.min(w, h) / 4);
+            // Small circle, collapsed row
+            const r = Math.max(1, half * 0.6);
             ctx.beginPath();
-            ctx.arc(x + w / 2, y + h / 2, r, 0, Math.PI * 2);
+            ctx.arc(cx, cy, r, 0, Math.PI * 2);
             ctx.fill();
+            break;
+        }
+        case 'shape-by-rank': {
+            // rank 1-based, cycle: 0=circle, 1=triangle, 2=square, 3=diamond
+            const shapeIdx = ((rank || 1) - 1) % 4;
+            const r = Math.max(1, half * 0.85);
+            if (shapeIdx === 0) {
+                // Circle
+                ctx.beginPath();
+                ctx.arc(cx, cy, r, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (shapeIdx === 1) {
+                // Triangle (pointing up)
+                ctx.beginPath();
+                ctx.moveTo(cx, cy - r);
+                ctx.lineTo(cx + r, cy + r * 0.7);
+                ctx.lineTo(cx - r, cy + r * 0.7);
+                ctx.closePath();
+                ctx.fill();
+            } else if (shapeIdx === 2) {
+                // Square
+                ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+            } else {
+                // Diamond
+                ctx.beginPath();
+                ctx.moveTo(cx, cy - r);
+                ctx.lineTo(cx + r, cy);
+                ctx.lineTo(cx, cy + r);
+                ctx.lineTo(cx - r, cy);
+                ctx.closePath();
+                ctx.fill();
+            }
+            break;
+        }
+        case 'blank-square': {
+            // Very dim square for null/blank cells in shape-by-rank mode
+            const s = Math.max(2, half * 0.7);
+            ctx.fillRect(cx - s, cy - s, s * 2, s * 2);
             break;
         }
         case 'rect':
