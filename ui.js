@@ -203,7 +203,6 @@ function toggleHidden(cat) {
 
 // ============================================================================
 // RANK HIGHLIGHTING
-// Track a specific rank position through time
 // ============================================================================
 
 let highlightedRanks = new Set();
@@ -227,7 +226,6 @@ function renderPatternCategorySelector() {
 
     container.innerHTML = '';
 
-    // "All categories" checkbox
     const allRow = document.createElement('div');
     allRow.innerHTML = `
         <label>
@@ -237,7 +235,6 @@ function renderPatternCategorySelector() {
     `;
     container.appendChild(allRow);
 
-    // Individual category checkboxes
     State.categories.forEach(cat => {
         const row = document.createElement('div');
         row.className = 'pattern-cat-row';
@@ -265,9 +262,7 @@ function getPatternSelectedCats() {
 function normalizeDate(raw) {
     if (!raw) return null;
     raw = raw.trim();
-    // Already YYYY-MM-DD
     if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
-    // M/D/YYYY or MM/DD/YYYY — require 4-digit year
     const mdyMatch = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
     if (mdyMatch) {
         const [, m, d, y] = mdyMatch;
@@ -295,7 +290,6 @@ function runPatternUI() {
         return;
     }
 
-    // Temporarily override category selection for this match
     const results = Pattern.findSimilarDays(refDate, {
         topN: 10,
         useAllCategories: false,
@@ -344,28 +338,25 @@ function updateInsightsPanel() {
 
     const sorted = State.data;
     const lastDate = sorted[sorted.length - 1].date;
-    const det = Math_Divergence(lastDate); // getDivergence from math.js
+    const det = Math_Divergence(lastDate);
 
     if (!det) {
         panel.innerHTML = '<div class="info-text">Insufficient data for divergence analysis.</div>';
         return;
     }
 
-    // Find last harmony
     let lastHarmony = null;
     for (let i = sorted.length - 1; i >= 0; i--) {
         const d = getDivergence(sorted[i].date);
         if (d && d.status === 'harmony') { lastHarmony = sorted[i].date; break; }
     }
 
-    // 30-day average divergence
     const last30 = sorted.slice(-Math.min(30, sorted.length));
     const avg30 = last30.reduce((sum, d) => {
         const div = getDivergence(d.date);
         return sum + (div ? div.divergence : 0);
     }, 0) / last30.length;
 
-    // Peak divergence
     let peak = null;
     for (const entry of sorted) {
         const div = getDivergence(entry.date);
@@ -408,7 +399,6 @@ function updateInsightsPanel() {
 
 // ============================================================================
 // PANEL MANAGEMENT
-// Simple show/hide for collapsible sections
 // ============================================================================
 
 function showPanel(name) {
@@ -501,7 +491,6 @@ function updateGradientStopColor(i, hex) {
 }
 
 function addGradientStop() {
-    // Add a stop at the midpoint of the largest gap
     const stops = State.settings.gradient;
     let maxGap = 0;
     let insertPos = 0.5;
@@ -576,7 +565,6 @@ function loadSettings(file) {
                 const el = document.getElementById('windowSizeInput');
                 if (el) el.value = s.windowSize;
             }
-            // Sync UI labels
             setText('btnColorMode', State.settings.colorMode === 'rank' ? 'Color: Rank' : 'Color: Z-Score');
             setText('btnCellShape', `Cell: ${State.settings.cellShape}`);
             setText('btnSortMode', State.settings.sortMode === 'normal' ? 'Sort: Normal' : 'Sort: Middle-Out');
@@ -590,7 +578,6 @@ function loadSettings(file) {
     reader.readAsText(file);
 }
 
-// Alias so math.js getDivergence is accessible here without name collision
 const Math_Divergence = (date) => getDivergence(date);
 
 // ============================================================================
