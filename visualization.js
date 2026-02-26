@@ -79,7 +79,9 @@ function render(canvas) {
 
     // Dynamic row height by cell mode
     const cellMode = State.settings.cellShape || 'square';
-    VIZ.cellHeight = (cellMode === 'dot' || cellMode === 'shape-by-rank') ? 10 : 18;
+    if (cellMode === 'dot') VIZ.cellHeight = 7;
+    else if (cellMode === 'shape-by-rank') VIZ.cellHeight = 11;
+    else VIZ.cellHeight = 11;  // square — nearly touching
 
     const numCats = sortedCats.length;
     const numDates = visibleDates.length;
@@ -294,8 +296,8 @@ function drawCell(ctx, x, y, w, h, shape, rank) {
 
     switch (shape) {
         case 'square': {
-            // Equal width/height square
-            ctx.fillRect(cx - half, cy - half, size, size);
+            // Fill nearly full cell — 1px gap total (0.5px each side)
+            ctx.fillRect(x + 0.5, y + 0.5, w - 1, h - 1);
             break;
         }
         case 'dot': {
